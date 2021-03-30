@@ -34,7 +34,7 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(jwtCheck);
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -43,13 +43,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet());
 
 app.use('/', routes);
+app.use(jwtCheck);
 app.use('/guilds', guilds);
 app.use('/prefixes', prefixes);
-
-
-app.get('/authorized', (req, res) => {
-    res.send('Secured Resource');
-});
 
 const not_found_err = (req, res, next) => {
     var err = new Error('Not Found');
