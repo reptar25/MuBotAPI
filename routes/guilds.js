@@ -33,6 +33,7 @@ router.get('/getByName/:guild_name', (req, res) => {
             if (result.rows.length > 0)
                 res.json(result.rows);
             else
+                //next will cause it to chain into 404 route
                 next();
         })
         .catch(e => console.error(e));
@@ -48,6 +49,7 @@ router.get('/:guild_id', (req, res, next) => {
             if (result.rows.length > 0)
                 res.json(result.rows);
             else
+                //next will cause it to chain into 404 route
                 next();
         })
         .catch(e => console.error(e));
