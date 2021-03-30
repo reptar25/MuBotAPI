@@ -4,8 +4,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    res.redirect('guilds');
-    //res.render('index', { title: 'Express' });
+    //res.redirect('guilds');
+    res.render('index', { title: 'Express' });
 });
 
 module.exports = router;

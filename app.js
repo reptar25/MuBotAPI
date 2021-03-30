@@ -7,6 +7,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
+var jwt = require('express-jwt');
+var jwks = require('jwks-rsa');
 
 var routes = require('./routes/index');
 var guilds = require('./routes/guilds');
@@ -14,12 +16,25 @@ var prefixes = require('./routes/prefixes');
 
 var app = express();
 
+const jwtCheck = jwt({
+    secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: 'https://bitter-sun-4965.us.auth0.com/.well-known/jwks.json'
+    }),
+    audience: 'https://mu--botapi.herokuapp.com/',
+    issuer: 'https://bitter-sun-4965.us.auth0.com/',
+    algorithms: ['RS256']
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet());
 
 app.use('/', routes);
+app.use(jwtCheck);
 app.use('/guilds', guilds);
 app.use('/prefixes', prefixes);
 
@@ -40,6 +56,7 @@ const not_found_err = (req, res, next) => {
 // error handlers
 // catch 404 and forward to error handler
 app.use(not_found_err);
+
 
 
 if (app.get('env') === 'development') {
