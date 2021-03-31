@@ -13,7 +13,7 @@ router.get('/count', (req, res) => {
 });
 
 /* GET guilds listing. */
-router.get('/', (req, res) => {
+router.route('/').get((req, res) => {
     const sql = 'SELECT * FROM guilds';
 
     client
@@ -22,6 +22,31 @@ router.get('/', (req, res) => {
         .catch(e => console.error(e));
 
 })
+    /* POST new guild */
+    .post((req, res) => {
+        const sql = 'INSERT INTO guilds (guild_id, guild_name) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET guild_name = $2';
+        const values = [req.body.guild_id, req.body.guild_name];
+
+        client
+            .query(sql, values)
+            .then(result => {
+                res.send(result);
+            })
+            .catch(e => console.error(e));
+    })
+
+    /* DELETE a guild */
+    .delete((req, res) => {
+        const sql = 'DELETE FROM guilds WHERE guild_id = $1';
+        const values = [req.body.guild_id];
+
+        client
+            .query(sql, values)
+            .then(result => {
+                res.send(result);
+            })
+            .catch(e => console.error(e));
+    });
 
 router.get('/getByName/:guild_name', (req, res) => {
     const sql = 'SELECT * FROM guilds WHERE guilds.guild_name = $1';
@@ -54,32 +79,6 @@ router.get('/:guild_id', (req, res, next) => {
         })
         .catch(e => console.error(e));
 
-});
-
-/* POST new guild */
-router.post('/', (req, res) => {
-    const sql = 'INSERT INTO guilds (guild_id, guild_name) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET guild_name = $2';
-    const values = [req.body.guild_id, req.body.guild_name];
-
-    client
-        .query(sql, values)
-        .then(result => {
-            res.send(result);
-        })
-        .catch(e => console.error(e));
-});
-
-/* DELETE a guild */
-router.delete('/', (req, res) => {
-    const sql = 'DELETE FROM guilds WHERE guild_id = $1';
-    const values = [req.body.guild_id];
-
-    client
-        .query(sql, values)
-        .then(result => {
-            res.send(result);
-        })
-        .catch(e => console.error(e));
 });
 
 module.exports = router;
