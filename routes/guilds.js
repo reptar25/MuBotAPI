@@ -13,15 +13,16 @@ router.get('/count', (req, res) => {
 });
 
 /* GET guilds listing. */
-router.route('/').get((req, res) => {
-    const sql = 'SELECT * FROM guilds';
+router.route('/')
+    .get((req, res) => {
+        const sql = 'SELECT * FROM guilds';
 
-    client
-        .query(sql)
-        .then(result => res.json(result.rows))
-        .catch(e => console.error(e));
+        client
+            .query(sql)
+            .then(result => res.json(result.rows))
+            .catch(e => console.error(e));
 
-})
+    })
     /* POST new guild */
     .post((req, res) => {
         const sql = 'INSERT INTO guilds (guild_id, guild_name) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET guild_name = $2';
