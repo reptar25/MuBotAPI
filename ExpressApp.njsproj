@@ -35,6 +35,7 @@
     <Content Include="dbClient.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="public\favicon.ico" />
     <Content Include="routes\index.js" />
     <Content Include="routes\guilds.js" />
     <Content Include="package.json" />
